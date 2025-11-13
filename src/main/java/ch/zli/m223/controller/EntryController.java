@@ -40,8 +40,8 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new entry.", description = "Creates a new entry and returns the newly added entry.")
-    public Entry create(Entry entry) {
-       return entryService.createEntry(entry);
+    public Entry create(Entry entryDTO) {
+       return entryService.createEntry(entryDTO);
     }
 
 
