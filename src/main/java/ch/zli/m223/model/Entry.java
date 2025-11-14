@@ -4,7 +4,9 @@ import javax.persistence.*;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Entry {
@@ -41,5 +43,28 @@ public class Entry {
 
   public void setCheckOut(LocalDateTime checkOut) {
     this.checkOut = checkOut;
+  }
+
+  
+  @ManyToOne
+  private Category category;
+
+  public void setCategory(Category category){
+    this.category = category;
+  }
+
+  public Category getCategory(){
+    return category;
+  }
+
+  @ManyToMany
+  private Set<Tag> tags;
+
+  public Set<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(Set<Tag> tags) {
+    this.tags = tags;
   }
 }
