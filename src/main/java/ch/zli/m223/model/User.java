@@ -2,12 +2,12 @@ package ch.zli.m223.model;
 import javax.persistence.*;
 import java.util.Set;
 import java.time.LocalDateTime;
-
-
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User{
-    @id
+    @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Schema(readOnly=true)
     private Long id;
@@ -19,7 +19,19 @@ public class User{
     private String email;
     
     @Column(nullable = false)
-    private LocalDateTime createdAt
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Category> categories;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Budget> budgets;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Transaction> transactions
 
     
     public Long getId() {
@@ -52,5 +64,29 @@ public class User{
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Set<Budget> getBudgets() {
+        return budgets;
+    }
+
+    public void setBudgets(Set<Budget> budgets) {
+        this.budgets = budgets;
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
