@@ -31,7 +31,7 @@ public class User{
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private Set<Transaction> transactions
+    private Set<Transaction> transactions;
 
     
     public Long getId() {

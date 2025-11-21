@@ -1,7 +1,6 @@
 package ch.zli.m223.model;
 import javax.persistence.*;
-import java.util.Set;
-import java.time.LocalDateTime;
+
 
 
 @Entity

@@ -1,6 +1,6 @@
 package ch.zli.m223.controller;
-import ch.zli.m223.model.Category;
-import ch.zli.m223.service.CategoryService;
+import ch.zli.m223.model.User;
+import ch.zli.m223.service.UserService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,37 +13,37 @@ import javax.ws.rs.core.MediaType;
 import javax.inject.Inject;
 import java.util.List;
 
-@Path("/categories")
-public class CategoryController {
+@Path("/users")
+public class UserController {
 
     @Inject
-    CategoryService categoryService;
+    UserService userService;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Category create(Category category){
-        return categoryService.createCategory(category);
+    public User create(User user){
+        return userService.createUser(user);
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Category> index(){
-        return categoryService.findAll();
+    public List<User> index(){
+        return userService.findAll();
     }
 
     @Path("/{id}")
     @DELETE
     public void delete(@PathParam("id") Long id){
-        categoryService.deleteCategory(id);
+        userService.deleteUser(id);
     }
 
     @Path("/{id}")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Category update(@PathParam("id") Long id, Category category){
-        return categoryService.updateCategory(id, category);
+    public User update(@PathParam("id") Long id, User user){
+        return userService.updateUser(id, user);
     }
 
 }

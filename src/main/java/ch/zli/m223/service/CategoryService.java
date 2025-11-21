@@ -34,15 +34,13 @@ public class CategoryService {
 
     @Transactional
     public Category updateCategory(Long id, Category updatedCategory) {
-        // 1. Finde die existierende Entity
         Category existingCategory = entityManager.find(Category.class, id);
         
-        // 2. Prüfe ob sie existiert
         if (existingCategory == null) {
-            return null; // oder Exception werfen
+            return null;
         }
         
-        // 3. Aktualisiere nur die erlaubten Felder
+     
         if (updatedCategory.getName() != null) {
             existingCategory.setName(updatedCategory.getName());
         }
@@ -50,7 +48,7 @@ public class CategoryService {
             existingCategory.setDescription(updatedCategory.getDescription());
         }
         
-        // 4. JPA merged automatisch beim @Transactional
+       
         return existingCategory;
     }
     

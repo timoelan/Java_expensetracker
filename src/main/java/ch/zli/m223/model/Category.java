@@ -1,7 +1,6 @@
 package ch.zli.m223.model;
 import javax.persistence.*;
 import java.util.Set;
-import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
