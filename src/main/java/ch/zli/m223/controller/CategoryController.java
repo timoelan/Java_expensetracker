@@ -1,5 +1,7 @@
 package ch.zli.m223.controller;
+import ch.zli.m223.dto.CategoryDTO;
 import ch.zli.m223.model.Category;
+import ch.zli.m223.model.User;
 import ch.zli.m223.service.CategoryService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,7 +24,15 @@ public class CategoryController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Category create(Category category){
+    public Category create(CategoryDTO dto){
+        Category category = new Category();
+        category.setName(dto.getName());
+        category.setDescription(dto.getDescription());
+
+        User user = new User();
+        user.setId(dto.getUserId());
+        category.setUser(user);
+
         return categoryService.createCategory(category);
     }
     

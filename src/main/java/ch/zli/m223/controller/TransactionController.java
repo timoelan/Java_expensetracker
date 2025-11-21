@@ -1,5 +1,8 @@
 package ch.zli.m223.controller;
+import ch.zli.m223.dto.TransactionDTO;
 import ch.zli.m223.model.Transaction;
+import ch.zli.m223.model.User;
+import ch.zli.m223.model.Category;
 import ch.zli.m223.service.TransactionService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,8 +25,23 @@ public class TransactionController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Transaction create(Transaction transaction){
+    public Transaction create(TransactionDTO dto){
+        Transaction transaction = new Transaction();
+        transaction.setAmount(dto.getAmount());
+        transaction.setDescription(dto.getDescription());
+        transaction.setDate(dto.getDate());
+        transaction.setCreatedAt(dto.getCreatedAt());
+
+        User user = new User();
+        user.setId(dto.getUserId());
+        transaction.setUser(user);
+
+        Category category = new Category();
+        category.setId(dto.getCategoryId());
+        transaction.setCategory(category);
+
         return transactionService.createTransaction(transaction);
+
     }
     
     @GET

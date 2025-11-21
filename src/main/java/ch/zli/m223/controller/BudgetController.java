@@ -1,5 +1,8 @@
 package ch.zli.m223.controller;
+import ch.zli.m223.dto.BudgetDTO;
 import ch.zli.m223.model.Budget;
+import ch.zli.m223.model.User;
+import ch.zli.m223.model.Category;
 import ch.zli.m223.service.BudgetService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,7 +25,20 @@ public class BudgetController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Budget create(Budget budget){
+    public Budget create(BudgetDTO dto){
+        Budget budget = new Budget();
+        budget.setAmount(dto.getAmount());
+        budget.setMonth(dto.getMonth());
+        budget.setYear(dto.getYear());
+        
+        User user = new User();
+        user.setId(dto.getUserId());
+        budget.setUser(user);
+        
+        Category category = new Category();
+        category.setId(dto.getCategoryId());
+        budget.setCategory(category);
+        
         return budgetService.createBudget(budget);
     }
     

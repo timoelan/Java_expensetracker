@@ -55,3 +55,11 @@ VALUES (8, 65, 'Restaurant', '2025-01-21T18:30:00', '2025-01-21T18:30:00', 1, 1)
 
 INSERT INTO transaction (id, amount, description, date, createdAt, user_id, category_id) 
 VALUES (9, 40, 'Zugticket', '2025-01-22T07:00:00', '2025-01-22T07:00:00', 1, 2);
+
+-- ==============================
+-- RESET SEQUENCES
+-- ==============================
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
+SELECT setval('category_id_seq', (SELECT MAX(id) FROM category));
+SELECT setval('budget_id_seq', (SELECT MAX(id) FROM budget));
+SELECT setval('transaction_id_seq', (SELECT MAX(id) FROM transaction));

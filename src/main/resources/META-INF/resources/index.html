@@ -1,37 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Punchclock Client</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="script.js" type="application/javascript"></script>
-    </head>
-    <body>
-        <form id="createEntryForm">
-            <label for="checkIn">Check in</label>
-            <input type="date" name="checkInDate" id="checkIn" required>
-            <input type="time" name="checkInTime" required>
-            <label for="checkOut">Check out</label>
-            <input type="date" name="checkOutDate" id="checkOut" required>
-            <input type="time" name="checkOutTime" required>
-            <input type="submit" value="Save" />
-        </form>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Check in</th>
-                    <th>Check out</th>
-                </tr>
-            </thead>
-            <tbody id="entryDisplay">
-                <tr>
-                    <td colspan="3">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Expense Tracker Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">
+            <span class="logo">💰</span>
+            <h1>Expense Tracker</h1>
+        </div>
+        <div class="nav-stats">
+            <div class="stat-card">
+                <span class="stat-label">Gesamt Ausgaben</span>
+                <span class="stat-value" id="totalExpenses">0 CHF</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Diesen Monat</span>
+                <span class="stat-value" id="monthExpenses">0 CHF</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('dashboard')">
+                <span class="tab-icon">📊</span> Dashboard
+            </button>
+            <button class="tab" onclick="showTab('transactions')">
+                <span class="tab-icon">💳</span> Transaktionen
+            </button>
+            <button class="tab" onclick="showTab('categories')">
+                <span class="tab-icon">🏷️</span> Kategorien
+            </button>
+            <button class="tab" onclick="showTab('budgets')">
+                <span class="tab-icon">🎯</span> Budgets
+            </button>
+            <button class="tab" onclick="showTab('users')">
+                <span class="tab-icon">👤</span> Users
+            </button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard-tab" class="tab-content active">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>📈 Übersicht</h3>
+                    <div class="dashboard-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">💳</span>
+                            <div>
+                                <div class="stat-number" id="dashTotalTransactions">0</div>
+                                <div class="stat-text">Transaktionen</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🏷️</span>
+                            <div>
+                                <div class="stat-number" id="dashTotalCategories">0</div>
+                                <div class="stat-text">Kategorien</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎯</span>
+                            <div>
+                                <div class="stat-number" id="dashTotalBudgets">0</div>
+                                <div class="stat-text">Budgets</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🔥 Top Kategorien</h3>
+                    <div id="topCategories" class="category-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <h3>📅 Letzte Transaktionen</h3>
+                    <div id="recentTransactions" class="recent-list">
+                        <p class="loading">Laden...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSACTIONS -->
+        <div id="transactions-tab" class="tab-content">
+            <div class="card">
+                <h2>💳 Neue Transaktion</h2>
+                <form id="createTransactionForm" class="form modern-form">
+                    <div class="form-group">
+                        <label>💰 Betrag (CHF)</label>
+                        <input type="number" name="amount" placeholder="z.B. 50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Beschreibung</label>
+                        <input type="text" name="description" placeholder="z.B. Supermarkt" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Datum & Zeit</label>
+                        <input type="datetime-local" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 User</label>
+                        <select name="userId" id="transactionUserId" required>
+                            <option value="">Wählen...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Kategorie</label>
+                        <select name="categoryId" id="transactionCategoryId" required>
+                            <option value="">Wählen...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <span>✓</span> Transaktion speichern
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Alle Transaktionen</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Betrag</th>
+                                <th>Beschreibung</th>
+                                <th>Datum</th>
+                                <th>User</th>
+                                <th>Kategorie</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsDisplay">
+                            <tr><td colspan="6" class="loading">Laden...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div id="categories-tab" class="tab-content">
+            <div class="card">
+                <h2>🏷️ Neue Kategorie</h2>
+                <form id="createCategoryForm" class="form modern-form">
+                    <div class="form-group">
+                        <label>📌 Name</label>
+                        <input type="text" name="name" placeholder="z.B. Lebensmittel" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📝 Beschreibung</label>
+                        <input type="text" name="description" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>👤 User</label>
+                        <select name="userId" id="categoryUserId" required>
+                            <option value="">Wählen...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <span>✓</span> Kategorie speichern
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Alle Kategorien</h2>
+                <div class="categories-grid" id="categoriesDisplay">
+                    <p class="loading">Laden...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUDGETS -->
+        <div id="budgets-tab" class="tab-content">
+            <div class="card">
+                <h2>🎯 Neues Budget</h2>
+                <form id="createBudgetForm" class="form modern-form">
+                    <div class="form-group">
+                        <label>💰 Betrag (CHF)</label>
+                        <input type="number" name="amount" placeholder="z.B. 500" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📅 Monat</label>
+                            <select name="month" required>
+                                <option value="">Wählen...</option>
+                                <option value="1">Januar</option>
+                                <option value="2">Februar</option>
+                                <option value="3">März</option>
+                                <option value="4">April</option>
+                                <option value="5">Mai</option>
+                                <option value="6">Juni</option>
+                                <option value="7">Juli</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Dezember</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📆 Jahr</label>
+                            <input type="number" name="year" placeholder="2025" value="2025" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>👤 User</label>
+                        <select name="userId" id="budgetUserId" required>
+                            <option value="">Wählen...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Kategorie</label>
+                        <select name="categoryId" id="budgetCategoryId" required>
+                            <option value="">Wählen...</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <span>✓</span> Budget speichern
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Alle Budgets</h2>
+                <div class="budgets-grid" id="budgetsDisplay">
+                    <p class="loading">Laden...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- USERS -->
+        <div id="users-tab" class="tab-content">
+            <div class="card">
+                <h2>👤 Neuer User</h2>
+                <form id="createUserForm" class="form modern-form">
+                    <div class="form-group">
+                        <label>👨‍💼 Name</label>
+                        <input type="text" name="name" placeholder="z.B. Max Mustermann" required>
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email</label>
+                        <input type="email" name="email" placeholder="z.B. max@example.com" required>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <span>✓</span> User speichern
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Alle Users</h2>
+                <div class="users-grid" id="usersDisplay">
+                    <p class="loading">Laden...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
